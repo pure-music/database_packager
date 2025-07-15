@@ -24,13 +24,15 @@ jobs:
           ./gradlew clean build
       - name: package sqlite
         run: |
-          today=$(date '+%Y-%m-%d')
+          today=$(date '+%Y-%m-%d-%H-%M')
           db_file="${today}.db"
+          echo "buildTime=$today" >> $GITHUB_ENV
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} ${{ env.db_path }}
       - name: Create Release
         id: create_remote_release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{github.ref_name}}
+          name: ${{env.today}}
+          tag_name: ${{env.today}}
           files: ${{ env.db_path }}
