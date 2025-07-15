@@ -28,13 +28,13 @@ jobs:
           db_file="${today}.db"
           echo "buildTime=$today" >> $GITHUB_ENV
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
-          echo ${{env.today}}
+          echo ${{env.buildTime}}
           echo ${{env.db_path}}
           java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} ${{ env.db_path }}
       - name: Create Release
         id: create_remote_release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{env.today}}
-          tag_name: ${{env.today}}
+          name: ${{env.buildTime}}
+          tag_name: ${{env.buildTime}}
           files: ${{ env.db_path }}
