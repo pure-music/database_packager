@@ -20,6 +20,9 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
 
     init {
         databasePath.delete()
+        if (!databasePath.parentFile.exists()) {
+            databasePath.parentFile.mkdirs()
+        }
         db = Room.databaseBuilder<Database>(
             name = databasePath.absolutePath)
             .setDriver(BundledSQLiteDriver())

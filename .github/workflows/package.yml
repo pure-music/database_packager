@@ -31,7 +31,7 @@ jobs:
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
           echo "${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }}"
-          java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} $db_path
+          java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar 1 ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} $db_path
       - name: Create Release
         id: create_remote_release
         uses: softprops/action-gh-release@v1
