@@ -13,8 +13,8 @@ import java.io.File
 import kotlin.text.toByteArray
 
 class SubsonicPackager(private val httpClient: HttpClient, private val webdavHost: String,
-                       private val username: String, private val pwd: String, dbDir: String): Packager {
-    private val databasePath: File = File(dbDir,webdavHost.toByteArray().md5().hex + ".sqlite")
+                       private val username: String, private val pwd: String, dbPath: String): Packager {
+    private val databasePath: File = File(dbPath)
     private val db: Database
     private val pageSize = 500
 
