@@ -1,0 +1,88 @@
+
+[versions]
+kotlin = "2.1.10"
+ktor = "3.1.3"
+androidGradlePlugin = "8.9.3"
+jetbrains-compose = "1.8.1"
+kotlinCompiler = "1.5.14"
+xmlutil = "0.86.2"
+coil3 = "3.2.0"
+decompose = "3.4.0-alpha03"
+player = "2.1.1"
+media3 = "1.6.1"
+flipper = "0.162.0"
+room = "2.7.2"
+sqlite = "2.5.2"
+
+[libraries]
+#ktor
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-network = { group = "io.ktor", name = "ktor-network", version.ref = "ktor" }
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-io = { group = "io.ktor", name = "ktor-io", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+#xmlutil
+xmlutil-core = { group = "io.github.pdvrieze.xmlutil", name = "core", version.ref = "xmlutil" }
+xmlutil-serialization = { group = "io.github.pdvrieze.xmlutil", name = "serialization", version.ref = "xmlutil" }
+#coil3
+coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil3" }
+coil3-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil3" }
+coil3-network = { group = "io.coil-kt.coil3", name = "coil-network-core", version.ref = "coil3" }
+coil3-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil3" }
+coil3-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil3" }
+#decompose
+decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
+decompose-jetbrains = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
+#kotlin
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version = "1.10.1" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.7.3" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.6.0" }
+#okhttp
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version = "4.12.0" }
+#mmkv
+mmkv-android = { group = "io.github.caij", name = "MMKVSharedPreferences", version = "1.0.2" }
+mmkv-kotlin = { group = "com.ctrip.flight.mmkv", name = "mmkv-kotlin", version = "1.2.10" }
+
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"  }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"  }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
+sqlite = { module = "androidx.sqlite:sqlite", version.ref = "sqlite" }
+
+#android
+toast = { group = "com.caij.lib", name = "toast", version = "2.0.0.6" }
+lifemanager = { group = "com.caij.lib", name = "lifemanager", version = "1.1.3.0" }
+system = { group = "com.caij.lib", name = "system", version = "1.1.10" }
+easypermissions = { group = "io.github.caij", name = "EasyPermissions", version = "3.1.1" }
+player = { group = "com.caij.lib", name = "player", version.ref = "player" }
+player-exoplayer3 = { group = "com.caij.lib", name = "exoplayer3", version.ref = "player" }
+player-exoplayer3-ffmpeg = { group = "com.caij.lib", name = "exoplayer3-ffmpeg", version.ref = "player" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3" }
+player-mpv = { group = "com.caij.lib", name = "mpvplayer", version.ref = "player" }
+
+#firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "32.7.4" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-config = { module = "com.google.firebase:firebase-config" }
+firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+#flipper
+flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
+flipper-network = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
+flipper-soloader = { group = "com.facebook.soloader", name = "soloader", version = "0.10.4" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+androidx-room = { id = "androidx.room", version.ref = "room" }
+google-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27" }
+
