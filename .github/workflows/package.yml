@@ -25,16 +25,19 @@ jobs:
       - name: package sqlite
         run: |
           today=$(date '+%Y-%m-%d-%H-%M')
-          db_file="${today}.db"
+          host=$(echo "${{ secrets.host }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
+          echo "$host"
+          db_file="$host.db"
           echo "buildTime=$today" >> $GITHUB_ENV
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
           echo "${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }}"
           java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar 1 ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} $db_path
-          zipFile="${db_path}.zip"
+          zipFile="${db_file}.zip"
           echo "zipFile=$zipFile" >> $GITHUB_ENV
-          zip $zipFile $db_path
+          cd ${{github.workspace}}
+          zip $zipFile $db_file
       - name: Create Release
         id: create_remote_release
         uses: softprops/action-gh-release@v1
