@@ -63,7 +63,7 @@ jobs:
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
-          java -jar artifacts/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ secrets[matrix.url] }} ${{ secrets[matrix.username] }} ${{ secrets[matrix.password] }} $db_path
+          java -jar artifacts/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ secrets[matrix.url] }} ${{ secrets[matrix.username] }} ${{ secrets[matrix.password] }} $db_path
           zipFile="$host.db.zip"
           echo "zipFile=$zipFile" >> $GITHUB_ENV
           cd ${{github.workspace}}
