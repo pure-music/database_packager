@@ -54,7 +54,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifacts_jar
-          path: artifacts/jar
+          path: artifacts
       - name: package sqlite
         run: |
 #          today=$(date '+%Y-%m-%d-%H-%M')
@@ -66,7 +66,7 @@ jobs:
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
           echo "${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }}"
-          java -jar artifacts/jar/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ matrix.url }} ${{ matrix.username }} ${{ matrix.password }} $db_path
+          java -jar artifacts/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ matrix.url }} ${{ matrix.username }} ${{ matrix.password }} $db_path
           zipFile="$host.db.zip"
           echo "zipFile=$zipFile" >> $GITHUB_ENV
           cd ${{github.workspace}}
