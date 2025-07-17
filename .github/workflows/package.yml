@@ -50,11 +50,7 @@ jobs:
           java-version: '18'
           distribution: 'temurin'
           cache: gradle
-      - name: Download jar
-        uses: actions/download-artifact@v4
-        with:
-          name: artifacts_jar
-          path: artifacts
+
       - name: package sqlite
         run: |
 #          today=$(date '+%Y-%m-%d-%H-%M')
