@@ -36,7 +36,7 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
 
         while (hasNextAlbums) {
             println("start albumOffset ${System.currentTimeMillis()} $albumOffset")
-            val muAlbums = getAlbums(albumOffset, pageSize)
+            val muAlbums = getAlbums(albumOffset, pageSize, 0)
             db.albumDao().insertAll(muAlbums)
             if (muAlbums.size > (pageSize  - 20)) {
                 hasNextAlbums = true
@@ -52,7 +52,7 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
         var songOffset = 0L
         while (hasNextSong) {
             println("start songOffset ${System.currentTimeMillis()} $songOffset")
-            val songs = getSongs(songOffset, pageSize)
+            val songs = getSongs(songOffset, pageSize, 0)
             db.songDao().insertAll(songs)
             if (songs.size > (pageSize  - 20)) {
                 hasNextSong = true
@@ -69,7 +69,7 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
         var artistOffset = 0L
         while (hasNextArtist) {
             println("start artistOffset ${System.currentTimeMillis()} $artistOffset")
-            val artists = getArtists(artistOffset, pageSize)
+            val artists = getArtists(artistOffset, pageSize, 0)
             db.artistDao().insertAll(artists)
             if (artists.size > (pageSize  - 20)) {
                 hasNextArtist = true
@@ -92,7 +92,7 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
         }
     }
 
-    private suspend fun getSongs(offsetSearch:Long, size: Int): List<SubsonicSong> {
+    private suspend fun getSongs(offsetSearch:Long, size: Int, retry: Int): List<SubsonicSong> {
         val getAlbumsUrl = webdavHost + "/rest/search3" + "?query=''&songCount=$size&songOffset=$offsetSearch&albumCount=0&artistCount=0&" + getComnParams()
         val searchResponse = httpClient.get(getAlbumsUrl)
         if (searchResponse.status.value in 200..299) {
@@ -109,11 +109,16 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
             }
             return emptyList()
         } else {
-            throw IllegalStateException("http error ${searchResponse.status.value}")
+            if (retry < 3) {
+                println("retry getSongs $offsetSearch $size")
+                return getSongs(offsetSearch, size, retry + 1)
+            } else {
+                throw IllegalStateException("http error ${searchResponse.status.value}")
+            }
         }
     }
 
-    private suspend fun getAlbums(albumOffset:Long, size: Int): List<SubsonicAlbum> {
+    private suspend fun getAlbums(albumOffset:Long, size: Int, retry: Int): List<SubsonicAlbum> {
         val getAlbumsUrl = webdavHost + "/rest/search3" + "?query=''&songCount=0&albumCount=${size}&artistCount=0&albumOffset=$albumOffset&" + getComnParams()
         val albumsResponse = httpClient.get(getAlbumsUrl)
         if (albumsResponse.status.value in 200..299) {
@@ -131,11 +136,16 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
             }
             return emptyList()
         } else {
-            throw IllegalStateException("http error ${albumsResponse.status.value}")
+            if (retry < 3) {
+                println("retry getAlbums $albumOffset $size")
+                return getAlbums(albumOffset, size, retry + 1)
+            } else {
+                throw IllegalStateException("http error ${albumsResponse.status.value}")
+            }
         }
     }
 
-    private suspend fun getArtists(offset:Long, size: Int): List<SubsonicArtist> {
+    private suspend fun getArtists(offset:Long, size: Int, retry: Int): List<SubsonicArtist> {
         val getAlbumsUrl = webdavHost + "/rest/search3" + "?query=''&songCount=0&artistOffset=$offset&albumCount=0&artistCount=$size&" + getComnParams()
         val searchResponse = httpClient.get(getAlbumsUrl)
         if (searchResponse.status.value in 200..299) {
@@ -155,7 +165,12 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
                 throw IllegalStateException("searchListResponse null")
             }
         } else {
-            throw IllegalStateException("http error ${searchResponse.status.value}")
+            if (retry < 3) {
+                println("retry getArtists $offset $size")
+                return getArtists(offset, size, retry + 1)
+            } else {
+                throw IllegalStateException("http error ${searchResponse.status.value}")
+            }
         }
     }
 
