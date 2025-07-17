@@ -6,8 +6,8 @@ on:
   workflow_dispatch:      # 也支持手动触发
 
 jobs:
-  package:
-    name: package
+  builde:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,26 +22,69 @@ jobs:
       - name: Build china jar
         run: |
           ./gradlew clean build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifacts_jar
+          if-no-files-found: error
+          path: |
+            ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar
+
+  package:
+    needs: build
+    name: package
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - url: ${{ secrets.host }}
+            username: ${{ secrets.user }}
+            password: ${{ secrets.password }}
+            type: 1
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 18
+        uses: actions/setup-java@v3
+        with:
+          java-version: '18'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Download x86_64 dmg artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts_jar
+          path: artifacts/jar
+
       - name: package sqlite
         run: |
-          today=$(date '+%Y-%m-%d-%H-%M')
-          host=$(echo "${{ secrets.host }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
+#          today=$(date '+%Y-%m-%d-%H-%M')
+          host=$(echo "${{ matrix.url }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
           echo "$host"
           db_file="main.db"
-          echo "buildTime=$today" >> $GITHUB_ENV
+#          echo "buildTime=$today" >> $GITHUB_ENV
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
           echo "${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }}"
-          java -jar ${{github.workspace}}/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar 1 ${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }} $db_path
+          java -jar artifacts/jar/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ matrix.url }} ${{ matrix.username }} ${{ matrix.password }} $db_path
           zipFile="$host.db.zip"
           echo "zipFile=$zipFile" >> $GITHUB_ENV
           cd ${{github.workspace}}
           zip $zipFile $db_file
-      - name: Create Release
-        id: create_remote_release
-        uses: softprops/action-gh-release@v1
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: ${{env.buildTime}}
-          tag_name: ${{env.buildTime}}
-          files: ${{github.workspace}}/${{ env.zipFile }}
+          name: artifacts_jar
+          if-no-files-found: error
+          path: |
+            ${{github.workspace}}/${{ env.zipFile }}
+
+#      - name: Create Release
+#        id: create_remote_release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          name: ${{env.buildTime}}
+#          tag_name: ${{env.buildTime}}
+#          files: ${{github.workspace}}/${{ env.zipFile }}
