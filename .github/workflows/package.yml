@@ -50,13 +50,16 @@ jobs:
           java-version: '18'
           distribution: 'temurin'
           cache: gradle
+      - name: Download jar
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts_jar
+          path: artifacts
       - name: package sqlite
         run: |
-#          today=$(date '+%Y-%m-%d-%H-%M')
           host=$(echo "${{ matrix.url }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
           echo "$host"
           db_file="main.db"
-#          echo "buildTime=$today" >> $GITHUB_ENV
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
@@ -72,11 +75,3 @@ jobs:
           if-no-files-found: error
           path: |
             ${{github.workspace}}/${{ env.zipFile }}
-
-#      - name: Create Release
-#        id: create_remote_release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          name: ${{env.buildTime}}
-#          tag_name: ${{env.buildTime}}
-#          files: ${{github.workspace}}/${{ env.zipFile }}
