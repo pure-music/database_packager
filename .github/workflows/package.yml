@@ -44,4 +44,4 @@ jobs:
         with:
           name: ${{env.buildTime}}
           tag_name: ${{env.buildTime}}
-          files: ${{ env.db_path }}.zip
+          files: ${{github.workspace}}/${{ env.zipFile }}
