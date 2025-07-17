@@ -51,12 +51,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Download x86_64 dmg artifacts
+      - name: Download jar
         uses: actions/download-artifact@v4
         with:
           name: artifacts_jar
           path: artifacts/jar
-
       - name: package sqlite
         run: |
 #          today=$(date '+%Y-%m-%d-%H-%M')
