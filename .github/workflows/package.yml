@@ -36,9 +36,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - url: ${{ secrets.host }}
-            username: ${{ secrets.user }}
-            password: ${{ secrets.password }}
+          - url: host
+            username: user
+            password: password
             type: 1
 
     runs-on: ubuntu-latest
@@ -57,14 +57,13 @@ jobs:
           path: artifacts
       - name: package sqlite
         run: |
-          host=$(echo "${{ matrix.url }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
+          host=$(echo "${{ secrets[matrix.url] }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
           echo "$host"
           db_file="main.db"
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
           echo $db_path
-          echo "${{ secrets.host }} ${{ secrets.user }} ${{ secrets.password }}"
-          java -jar artifacts/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ matrix.url }} ${{ matrix.username }} ${{ matrix.password }} $db_path
+          java -jar artifacts/build/libs/subsonic_database_scan-1.0-SNAPSHOT.jar ${{ matrix.type }} ${{ secrets[matrix.url] }} ${{ secrets[matrix.username] }} ${{ secrets[matrix.password] }} $db_path
           zipFile="$host.db.zip"
           echo "zipFile=$zipFile" >> $GITHUB_ENV
           cd ${{github.workspace}}
