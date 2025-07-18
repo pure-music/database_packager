@@ -71,7 +71,7 @@ jobs:
           zip $zipFile $db_file
       - uses: actions/upload-artifact@v4
         with:
-          name: artifacts_$host
+          name: artifacts_${{ env.host }}
           if-no-files-found: error
           path: |
             ${{github.workspace}}/${{ env.zipFile }}
