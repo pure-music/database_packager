@@ -59,6 +59,7 @@ jobs:
         run: |
           host=$(echo "${{ secrets[matrix.url] }}" | sed -E 's#^https?://([^/:]+).*#\1#' | sed 's/\./_/g')
           echo "$host"
+          echo "host=$host" >> $GITHUB_ENV
           db_file="main.db"
           db_path=${{github.workspace}}/$db_file
           echo "db_path=${{github.workspace}}/$db_file" >> $GITHUB_ENV
@@ -70,7 +71,29 @@ jobs:
           zip $zipFile $db_file
       - uses: actions/upload-artifact@v4
         with:
-          name: artifacts_jar
+          name: artifacts_$host
           if-no-files-found: error
           path: |
             ${{github.workspace}}/${{ env.zipFile }}
+
+  release:
+    needs: package
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts_music_mefun_org
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts_music_mefun_org
+          path: artifacts
+      - name: parse
+        run: |
+          today=$(date '+%Y-%m-%d-%H-%M')
+          echo "buildTime=$today" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_remote_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{env.buildTime}}
+          tag_name: ${{env.buildTime}}
+          files: artifacts/*
