@@ -101,6 +101,11 @@ jobs:
         with:
           name: artifacts_yinhai_aiinyue_com
           path: artifacts
+      - name: Download artifacts_music_wenjian_de
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts_music_wenjian_de
+          path: artifacts
       - name: parse
         run: |
           today=$(date '+%Y-%m-%d-%H-%M')
