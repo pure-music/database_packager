@@ -46,6 +46,11 @@ jobs:
             password: password_yinhai
             type: 1
 
+          - url: url_wenjian
+            username: username_wenjian
+            password: password_wenjian
+            type: 1
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
