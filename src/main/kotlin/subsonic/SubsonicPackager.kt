@@ -6,9 +6,12 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import korlibs.crypto.md5
 import kotlinx.coroutines.*
 import kotlinx.datetime.Clock
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.text.toByteArray
 
@@ -82,6 +85,30 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
 
     override suspend fun pack() {
         coroutineScope {
+            val url = "$webdavHost/auth/login"
+            try {
+                val unstarRequest = HttpRequestBuilder().apply {
+                    url(URLBuilder(url).build())
+                    val params = HashMap<String, String>()
+                    params["username"] = username
+                    params["password"] = pwd
+                    setBody(Json.encodeToString(params))
+                    contentType(ContentType.Application.Json)
+                }
+                val response = httpClient.post(unstarRequest)
+                if (response.status.value in 200..299) {
+                    val navidromeResponse = response.body<NavidromeResponse>()
+                    if (navidromeResponse.error != null) {
+                        println("login error navidromeResponse errpr ${navidromeResponse.error}")
+                    }
+                    println("login success")
+                } else {
+                    println("login error http errpr ${response.status.value}")
+                }
+            } catch (e: Exception) {
+                println("login error Exception ${e.message}")
+            }
+
             val job1 = async {
                 requestArtists()
                 requestAlbums()
