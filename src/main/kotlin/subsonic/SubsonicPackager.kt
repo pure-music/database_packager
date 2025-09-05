@@ -186,7 +186,7 @@ class SubsonicPackager(private val httpClient: HttpClient, private val webdavHos
                 } else if (subsonicResponse.status != "ok") {
                     throw IllegalStateException( "${subsonicResponse.status} ${subsonicResponse.error?.code} ${subsonicResponse.error?.message}")
                 } else {
-                    throw IllegalStateException("subsonicResponse")
+                    throw IllegalStateException("subsonicResponse ${subsonicResponse.status} ${subsonicResponse.error?.code} ${subsonicResponse.error?.message}")
                 }
             } else {
                 throw IllegalStateException("searchListResponse null")
