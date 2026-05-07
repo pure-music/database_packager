@@ -41,11 +41,6 @@ jobs:
             password: password_mefun
             type: 1
 
-          - url: url_yinhai
-            username: username_yinhai
-            password: password_yinhai
-            type: 1
-
           - url: url_wenjian
             username: username_wenjian
             password: password_wenjian
